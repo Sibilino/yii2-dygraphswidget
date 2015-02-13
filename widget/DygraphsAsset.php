@@ -7,6 +7,6 @@ class DygraphsAsset extends AssetBundle
 {
 	public $sourcePath = '@vendor/sibilino/yii2-dygraphswidget';
 	public $js = [
-		'js/dygraph-combined.js',
+		'widget/js/dygraph-combined.js',
 	];
 }
