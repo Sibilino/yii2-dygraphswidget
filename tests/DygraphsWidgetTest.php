@@ -2,6 +2,7 @@
 namespace sibilino\y2dygraphs;
 
 use yii\base\Model;
+use PHPUnit_Framework_TestCase;
 
 class TestModel extends Model 
 {
@@ -22,11 +23,11 @@ class DygraphsWidgetTest extends PHPUnit_Framework_TestCase {
 			'attribute' => 'chart',
 		]);
 		
-		$this->assertInstanceOf('DygraphsWidget', $widget);
+		$this->assertInstanceOf('sibilino\y2dygraphs\DygraphsWidget', $widget);
 		$this->assertTrue(isset($widget->htmlOptions['id']));
 		$this->assertTrue(isset($widget->jsVarName));
 		$this->assertEquals($model->chart, $widget->data);
-		$this->assertContains('DygraphsWidget', $widget->view->assetBundles);
+		$this->assertArrayHasKey('sibilino\y2dygraphs\DygraphsAsset', $widget->view->assetBundles);
 	}
 	
 	/* public function testRun() {
