@@ -1,6 +1,6 @@
 # Dygraphs Widget for Yii
 -------------------------
-A simple graph widget for Yii 1, based on [Dygraphs] (http://dygraphs.com/).
+A simple graph widget for Yii 2, based on [Dygraphs] (http://dygraphs.com/).
 
 ## Installation
 ---------------
