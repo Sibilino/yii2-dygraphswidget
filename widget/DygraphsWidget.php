@@ -37,18 +37,18 @@ class DygraphsWidget extends Widget
 	 * @link http://dygraphs.com/data.html#array
 	 * @var mixed Array or string
 	 */
-	public $data = array();
+	public $data = [];
 	/**
 	 * HTML options for the div containing the graph.
 	 * @var array
 	 */
-	public $htmlOptions = array();
+	public $htmlOptions = [];
 	/**
 	 * Additional Dygraphs options that will be passed to the Dygraphs object upon initialization.
 	 * @link http://dygraphs.com/options.html
 	 * @var array
 	 */
-	public $options = array();
+	public $options = [];
 	/**
 	 * The name of the JS variable that will receive the Dygraphs object. Optional.
 	 * @var string
