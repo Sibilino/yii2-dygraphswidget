@@ -4,7 +4,12 @@ A simple graph widget for Yii 2, based on [Dygraphs] (http://dygraphs.com/).
 
 ## Installation
 ---------------
-Download the latest release and unpack the **contents** of the `widget` folder inside the `protected\extensions\dygraphswidget` folder within your Yii application.
+Add *sibilino/yii2-dygraphswidget* to your *composer.json* file and perform a Composer Update as usual.
+```
+"require": {
+	"sibilino/yii2-dygraphswidget": "*"
+}
+```
 
 ## Usage
 --------
