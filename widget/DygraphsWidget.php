@@ -4,9 +4,9 @@ namespace sibilino\y2dygraphs;
 use yii\base\Widget;
 use yii\helpers\Json;
 use yii\web\JsExpression;
-use yii\validators\UrlValidator;
 use yii\helpers\Html;
 use yii\base\Model;
+
 /**
  * @link https://github.com/Sibilino/yii2-dygraphswidget
  * @copyright Copyright (c) 2015 Luis Hernández Hernández
@@ -102,21 +102,11 @@ class DygraphsWidget extends Widget
 	}
 	
 	/**
-	 * Encodes the current data into the proper JS variable, URL or function.
+	 * Encodes the current data into the proper JS variable.
 	 * @return Ambigous <string, mixed>
 	 */
 	protected function preprocessData() {
-		if (is_string($this->data)) {
-			if (strpos($this->data, 'function') === 0) {
-				$this->data = new JsExpression($this->data);
-			} else {
-				$url_validator = new UrlValidator();
-				$url = $url_validator->validateValue($this->data);
-				if ($url !== false) {
-					$this->data = $url;
-				}
-			}
-		} elseif (is_array($this->data)&& $this->xIsDate) {
+		if (is_array($this->data)&& $this->xIsDate) {
 			foreach ($this->data as &$row) {
 				$row[0] = new JsExpression("new Date('$row[0]')");
 			}

@@ -9,7 +9,7 @@ Download the latest release and unpack the **contents** of the `widget` folder i
 ## Usage
 --------
 In your view, create the widget with your data matrix as its *data* option.
-```
+```php
 $this->widget('ext.dygraphswidget.DygraphsWidget', array(
 		'data'=> $your_data,
 	));
@@ -18,7 +18,7 @@ $this->widget('ext.dygraphswidget.DygraphsWidget', array(
 ## Dygraphs options
 -------------------
 You can set the *options* property to pass additional options to the Dygraphs object:
-```
+```php
 $this->widget('DygraphsWidget', array(
 		'data'=> $your_data,
 		'options'=>array(
@@ -33,7 +33,7 @@ $this->widget('DygraphsWidget', array(
 ---------------
 The data property can be specified in three different formats. Consider the following examples, and make sure to read [the official documentation] (http://dygraphs.com/data.html) for more details:
 - **Matrix**
-```
+```php
 $data = array(
 	array(1, 25, 100),
 	array(2, 50, 90),
@@ -42,14 +42,14 @@ $data = array(
 );
 ```
 - **URL**
-An absolute URL to a text file with the data.
-```
+URL to a text file with the data.
+```php
 $data = 'http://dygraphs.com/dow.txt';
 ```
-- **Function**
-A string with JS code that returns a data object usable by Dygraphs.
-```
-$data = 'function () {
+- **JavaScript**
+JS code that returns a data object usable by Dygraphs. The code must be wrapped inside a JsExpression object:
+```php
+$data = new JsExpression('function () {
 	var data = [];
       for (var i = 0; i < 1000; i++) {
         var base = 10 * Math.sin(i / 90.0);
@@ -61,7 +61,7 @@ $data = 'function () {
         data[i][2] += 5.0;
       }
 	return data;
-}';
+}');
 ```
 
 ## Additional options
@@ -72,5 +72,24 @@ The following widget properties can also be specified:
 - **model** and **attribute**: Specify a CModel instance and one of its attributes in order to take the data from it.
 - **jsVarName**: Specifies a custom name for the JS variable that will receive the Dygraphs object upon creation.
 - **htmlOptions**: Additional HTML attributes for the graph-containing div.
+
+## JavaScript code in options
+-----------------------------
+Anytime you need to pass JavaScript code (for example, passing a function to an option), just pass a new JsExpression($your_js_code). For example:
+```php
+$options = array(
+    'underlayCallback' => new JsExpression('function(canvas, area, g)
+            {
+                var bottom_left = g.toDomCoords(highlight_start, -20);
+                var top_right = g.toDomCoords(highlight_end, +20);
+ 
+                var left = bottom_left[0];
+                var right = top_right[0];
+ 
+                canvas.fillStyle = "rgba(255, 255, 102, 1.0)";
+                canvas.fillRect(left, area.y, right - left, area.h);
+            }'),
+);
+```
 
  

@@ -3,6 +3,9 @@ namespace sibilino\y2dygraphs;
 
 use yii\base\Model;
 use PHPUnit_Framework_TestCase;
+use yii\helpers\VarDumper;
+use yii\web\View;
+use yii\web\JsExpression;
 
 class TestModel extends Model 
 {
@@ -30,104 +33,110 @@ class DygraphsWidgetTest extends PHPUnit_Framework_TestCase {
 		$this->assertArrayHasKey('sibilino\y2dygraphs\DygraphsAsset', $widget->view->assetBundles);
 	}
 	
-	/* public function testRun() {
-		$this->expectOutputString('<div id="test"></div>');
-		$widget = $this->controller->widget('DygraphsWidget', array(
-				'htmlOptions' => array('id'=>'test'),
-		));
-	}
-	
-	private function getLastScript() {
-		$scripts = array_values(end(Yii::app()->clientScript->scripts));
-		return end($scripts);
-	}
-	
-	private function dataTester($data, $expected) {
-		$widget = $this->controller->widget('DygraphsWidget', array(
-				'data'=>$data,
-		));
-		$this->assertContains($expected, $this->getLastScript());
+	public function testRun() {
+		$this->assertEquals('<div id="test"></div>',DygraphsWidget::widget([
+			'htmlOptions' => ['id' => 'test'],
+		]));
 	}
 	
 	public function testDataUrl() {
-		$this->dataTester('http://localhost/testdata.csv', "'http://localhost/testdata.csv',");
+		$widget = DygraphsWidget::begin([
+			'data' => 'http://localhost/testdata.csv',
+		]);
+		$widget->end();
+		$this->assertContains('"http://localhost/testdata.csv",', $this->getLastScript($widget));
 	}
 	
 	public function testDataFunction() {
-		$this->dataTester('function () {return [[1, 3, 4],[2, 7, 20]];}', "function () {return [[1, 3, 4],[2, 7, 20]];},");
+		$widget = DygraphsWidget::begin([
+			'data' => new JsExpression('function () { return [0, 7, 21]; }'),
+		]);
+		$widget->end();
+		$this->assertContains('function () { return [0, 7, 21]; },', $this->getLastScript($widget));
 	}
 	
 	public function testDataArray() {
-		$this->dataTester(array(
-				array(1, 25, 100),
-				array(2, 50, 90),
-				array(3, 100, 80),
-			), "[[1,25,100],[2,50,90],[3,100,80]]");
+		$widget = DygraphsWidget::begin([
+			'data' => [
+				[1,25,100],
+				[2,50,90],
+				[3,100,80]
+			],
+		]);
+		$widget->end();
+		$this->assertContains('[[1,25,100],[2,50,90],[3,100,80]],', $this->getLastScript($widget));
 	}
 	
 	public function testDataWithDates() {
-		$data = array(
-				array("2014/01/10 00:06:50", 25, 100),
-				array("2014/12/23 10:16:40", 50, 90),
-				array("2015/07/01 03:09:19", 100, 80),
-			);
-		
-		$widget = $this->controller->widget('DygraphsWidget', array(
-				'data'=>$data,
-				'xIsDate'=>true,
-		));
+		$widget = DygraphsWidget::begin([
+			'data' => [
+				["2014/01/10 00:06:50", 25, 100],
+				["2014/12/23 10:16:40", 50, 90],
+				["2015/07/01 03:09:19", 100, 80]
+			],
+			'xIsDate' => true,
+		]);
+		$widget->end();
 		$this->assertContains(
-				"[[new Date('2014/01/10 00:06:50'),25,100],[new Date('2014/12/23 10:16:40'),50,90],[new Date('2015/07/01 03:09:19'),100,80]]",
-				$this->getLastScript()
-				);
+			"[[new Date('2014/01/10 00:06:50'),25,100],[new Date('2014/12/23 10:16:40'),50,90],[new Date('2015/07/01 03:09:19'),100,80]],",
+			$this->getLastScript($widget));
 	}
 	
 	public function testVarName() {
-		$widget = $this->controller->widget('DygraphsWidget', array(
-				'jsVarName'=>'testvar',
-		));
-		$this->assertContains(
-				"var testvar = new Dygraph(",
-				$this->getLastScript()
-		);
+		$widget = DygraphsWidget::begin([
+			'jsVarName'=>'testvar',
+		]);
+		$widget->end();
+		$this->assertContains("var testvar = new Dygraph(", $this->getLastScript($widget));
 	}
 	
 	public function testOptions() {
-		$widget = $this->controller->widget('DygraphsWidget', array(
-				'options'=>array(
-		                'strokeWidth' => 2,
-		                'parabola' => array(
-		                  'strokeWidth' => 0.0,
-		                  'drawPoints' => true,
-		                  'pointSize' => 4,
-		                  'highlightCircleSize' => 6
-		                ),
-		                'line' => array(
-		                  'strokeWidth' => 1.0,
-		                  'drawPoints' => true,
-		                  'pointSize' => 1.5
-		                ),
-		                'sine wave' => array(
-		                  'strokeWidth' => 3,
-		                  'highlightCircleSize' => 10
-		                ),
-				),
-		));
+		$widget = DygraphsWidget::begin([
+			'options' => [
+                'strokeWidth' => 2,
+                'parabola' => [
+                  'strokeWidth' => 0.0,
+                  'drawPoints' => true,
+                  'pointSize' => 4,
+                  'highlightCircleSize' => 6
+                ],
+                'line' => [
+                  'strokeWidth' => 1.0,
+                  'drawPoints' => true,
+                  'pointSize' => 1.5
+                ],
+                'sine wave' => [
+                  'strokeWidth' => 3,
+                  'highlightCircleSize' => 10
+                ],
+			],
+		]);
+		$widget->end();
 		$this->assertContains(
-				"{'strokeWidth':2,'parabola':{'strokeWidth':0,'drawPoints':true,'pointSize':4,'highlightCircleSize':6},'line':{'strokeWidth':1,'drawPoints':true,'pointSize':1.5},'sine wave':{'strokeWidth':3,'highlightCircleSize':10}}",
-				$this->getLastScript()
-		);
+				'{"strokeWidth":2,"parabola":{"strokeWidth":0,"drawPoints":true,"pointSize":4,"highlightCircleSize":6},"line":{"strokeWidth":1,"drawPoints":true,"pointSize":1.5},"sine wave":{"strokeWidth":3,"highlightCircleSize":10}}',
+				$this->getLastScript($widget));
 	}
 	
 	public function testHtmlOptions() {
-		$this->expectOutputString('<div id="test-id" class="test-class centered" data-toggle="dropdown" onChange="alert(&#039;hello&#039;)"></div>');
-		$widget = $this->controller->widget('DygraphsWidget', array(
-				'htmlOptions'=>array(
-					'id' =>  'test-id',
-					'class' => 'test-class centered',
-					'data-toggle' => 'dropdown',
-					'onChange' => "alert('hello')"
-				),
-		));
-	} */
+		$output = DygraphsWidget::widget([
+			'htmlOptions' => [
+				'id' =>  'test-id',
+				'class' => 'test-class centered',
+				'data-toggle' => 'dropdown',
+				'onChange' => "alert('hello')"
+			],
+		]);
+		$this->assertEquals(
+				'<div id="test-id" class="test-class centered" data-toggle="dropdown" onChange="alert(&#039;hello&#039;)"></div>',
+				$output);
+	}
+	
+	/**
+	 * @param DygraphsWidget $widget
+	 * @return string
+	 */
+	private function getLastScript($widget) {
+		$scripts = $widget->view->js[View::POS_READY];
+		return end($scripts);
+	}
 }
