@@ -15,23 +15,23 @@ Add *sibilino/yii2-dygraphswidget* to your *composer.json* file and perform a Co
 --------
 In your view, create the widget with your data matrix as its *data* option.
 ```php
-$this->widget('ext.dygraphswidget.DygraphsWidget', array(
-		'data'=> $your_data,
-	));
+echo DygraphsWidget::widget([
+	'data' => $your_data,
+]);
 ```
 
 ## Dygraphs options
 -------------------
 You can set the *options* property to pass additional options to the Dygraphs object:
 ```php
-$this->widget('DygraphsWidget', array(
-		'data'=> $your_data,
-		'options'=>array(
-			'labels' => array('X', 'Sin', 'Rand', 'Pow'),
-			'title'=> 'Main Graph',
-			//...
-		),
-	));
+echo DygraphsWidget::widget([
+	'data' => $your_data,
+	'options' => [
+		'labels' => ['X', 'Sin', 'Rand', 'Pow'],
+		'title'=> 'Main Graph',
+		//...
+	],
+]);
 ```
 
 ## Data formats
@@ -54,7 +54,7 @@ $data = 'http://dygraphs.com/dow.txt';
 - **JavaScript**
 JS code that returns a data object usable by Dygraphs. The code must be wrapped inside a JsExpression object:
 ```php
-$data = new JsExpression('function () {
+$your_data = new JsExpression('function () {
 	var data = [];
       for (var i = 0; i < 1000; i++) {
         var base = 10 * Math.sin(i / 90.0);
