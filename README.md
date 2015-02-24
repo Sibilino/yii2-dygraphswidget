@@ -4,12 +4,34 @@ A simple graph widget for Yii 2, based on [Dygraphs] (http://dygraphs.com/).
 
 ## Installation
 ---------------
+
+### Composer
+
 Add *sibilino/yii2-dygraphswidget* to your *composer.json* file and perform a Composer Update as usual.
-```
+```json
 "require": {
 	"sibilino/yii2-dygraphswidget": "*"
 }
 ```
+
+### Manually
+
+If for some reason you cannot or do not want to use [Composer](https://getcomposer.org/ "Composer"), then you must create the widget folder manually, and then configure your Yii application to autoload the widget classes.
+
+First, create the folder _sibilino/yii2-dygraphswidget/widget_ inside the _vendor_ subfolder of your Yii application.
+
+Then, download the widget .zip file and extract the **contents** of its _widget_ subfolder into the folder you created in the previous step.
+
+Next, edit _config/web.php_ and add the following entry:
+```php
+[
+	'alias' => [
+		'@sibilino/y2dygraphs' => '@sibilino/yii2-dygraphswidget/widget',
+	],
+]
+```
+
+Finally, remember to use the namespace _sibilino\y2dygraphs_ when you call the widget.
 
 ## Usage
 --------
@@ -39,12 +61,12 @@ echo DygraphsWidget::widget([
 The data property can be specified in three different formats. Consider the following examples, and make sure to read [the official documentation] (http://dygraphs.com/data.html) for more details:
 - **Matrix**
 ```php
-$data = array(
-	array(1, 25, 100),
-	array(2, 50, 90),
-	array(3, 100, 80),
+$data = [
+	[1, 25, 100],
+	[2, 50, 90],
+	[3, 100, 80],
 	//...
-);
+];
 ```
 - **URL**
 URL to a text file with the data.
@@ -82,7 +104,7 @@ The following widget properties can also be specified:
 -----------------------------
 Anytime you need to pass JavaScript code (for example, passing a function to an option), just pass a new JsExpression($your_js_code). For example:
 ```php
-$options = array(
+$options = [
     'underlayCallback' => new JsExpression('function(canvas, area, g)
             {
                 var bottom_left = g.toDomCoords(highlight_start, -20);
@@ -94,7 +116,7 @@ $options = array(
                 canvas.fillStyle = "rgba(255, 255, 102, 1.0)";
                 canvas.fillRect(left, area.y, right - left, area.h);
             }'),
-);
+];
 ```
 
  
