@@ -4,6 +4,7 @@ namespace sibilino\y2dygraphs;
 use yii\base\Widget;
 use yii\helpers\Json;
 use yii\web\JsExpression;
+use yii\web\View;
 use yii\helpers\Html;
 use yii\base\Model;
 
@@ -20,6 +21,11 @@ class DygraphsWidget extends Widget
 	 * @var string
 	 */
 	public $scriptUrl;
+	/**
+	 * The position in which the Dygraphs object init script will be registerd. Note that the Dygraphs library will always be registered in POS_HEAD.
+	 * @var integer Optional, default is POS_READY.
+	 */
+	public $scriptPosition = View::POS_READY;
 	/**
 	 * Can be used together with $attribute instead of setting the $data property.
 	 * @var CModel
@@ -76,7 +82,6 @@ class DygraphsWidget extends Widget
 		} else {
 			DygraphsAsset::register($this->view);
 		}
-		
 	}
 	
 	public function run() {
@@ -89,7 +94,7 @@ class DygraphsWidget extends Widget
 			 $data,
 			 $options
 		);";
-		$this->view->registerJs($js);
+		$this->view->registerJs($js, $this->scriptPosition);
 		
 		return Html::tag('div', '', $this->htmlOptions);
 	}

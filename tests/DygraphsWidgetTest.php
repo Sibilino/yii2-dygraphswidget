@@ -2,7 +2,6 @@
 namespace sibilino\y2dygraphs;
 
 use yii\base\Model;
-use yii\helpers\VarDumper;
 use yii\web\View;
 use yii\web\JsExpression;
 use yiiunit\TestCase;
@@ -48,9 +47,13 @@ class DygraphsWidgetTest extends TestCase {
 	}
 	
 	public function testRun() {
-		$this->assertEquals('<div id="test"></div>',DygraphsWidget::widget([
+		$this->expectOutputString('<div id="test"></div>');
+		$widget = DygraphsWidget::begin([
 			'htmlOptions' => ['id' => 'test'],
-		]));
+			'scriptPosition' => View::POS_LOAD,
+		]);
+		$widget->end();
+		$this->assertArrayHasKey(View::POS_LOAD, $widget->view->js);
 	}
 	
 	/**
@@ -141,7 +144,7 @@ class DygraphsWidgetTest extends TestCase {
 	 * @return string
 	 */
 	private function getLastScript($widget) {
-		$scripts = $widget->view->js[View::POS_READY];
+		$scripts = $widget->view->js[$widget->scriptPosition];
 		return end($scripts);
 	}
 }
