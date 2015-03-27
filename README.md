@@ -2,6 +2,10 @@
 -------------------------
 A simple graph widget for Yii 2, based on [Dygraphs] (http://dygraphs.com/).
 
+## Changelog
+------------
+1.0.0 - Added visibility checkboxes feature and completed tests.
+
 ## Installation
 ---------------
 
@@ -119,4 +123,36 @@ $options = [
 ];
 ```
 
- 
+## Visibility checkboxes
+------------------------
+It is often useful to hide and show some of the dataseries in a chart. The widget features helper scripts to easily control series visibily with checkboxes.
+
+To use this feature, make sure your page has one checkbox per series in the chart, and give each checkbox an `id` attribute with the index of the series controlled by it.
+Then, configure the widget with a `checkBoxSelector` that matches the group of checkboxes. For example, for a chart with 2 data series:
+```html
+<input class="visibility" id="0" type="checkbox">
+<input class="visibility" id="1" type="checkbox">
+```
+```php
+<?= DygraphsWidget::widget([
+	'checkBoxSelector' => '.visibility',
+	'data' => [
+		// [x, series0, series1]
+		[1, 25, 100],
+		[2, 50, 90],
+		[3, 100, 80],
+		//...
+	],
+	'options' => [
+		// Starting visibility
+		'visibility' => [
+			false,
+			true,
+		],
+		//...
+	],
+	// ...
+]);?>
+```
+
+The attribute that associates a checkbox with a data series (`id` in the example) can be changed by configuring `checkBoxReferenceAttr`.
