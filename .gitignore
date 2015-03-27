@@ -18,6 +18,9 @@ local.properties
 .settings/
 .loadpath
 
+# Markdown previews
+*.md.html
+
 # External tool builders
 .externalToolBuilders/
 
