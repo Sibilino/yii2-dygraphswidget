@@ -41,6 +41,8 @@ Finally, remember to use the namespace _sibilino\y2dygraphs_ when you call the w
 --------
 In your view, create the widget with your data matrix as its *data* option.
 ```php
+use sibilino\y2dygraphs\DygraphsWidget;
+
 echo DygraphsWidget::widget([
 	'data' => $your_data,
 ]);
