@@ -2,10 +2,10 @@
 namespace sibilino\y2dygraphs;
 
 use yii\base\Model;
-use PHPUnit_Framework_TestCase;
 use yii\helpers\VarDumper;
 use yii\web\View;
 use yii\web\JsExpression;
+use yiiunit\TestCase;
 
 class TestModel extends Model 
 {
@@ -16,7 +16,21 @@ class TestModel extends Model
 	];
 }
 
-class DygraphsWidgetTest extends PHPUnit_Framework_TestCase {
+class DygraphsWidgetTest extends TestCase {
+	
+	protected function setUp() {
+		parent::setUp();
+		$this->mockApplication([
+			'vendorPath' => __DIR__.'/../../..',
+			'components' => [
+				'assetManager' => [
+					'basePath' => __DIR__.'/../../../../assets',
+					'baseUrl' => 'http://localhost/tester2/assets',
+				],
+			],
+		]);
+	}
+	
 	/* @var $widget DygraphsWidget */
 	public function testInit() {
 		
@@ -39,32 +53,23 @@ class DygraphsWidgetTest extends PHPUnit_Framework_TestCase {
 		]));
 	}
 	
-	public function testDataUrl() {
+	/**
+	 * @dataProvider dataFormatProvider
+	 */
+	public function testData($data, $expected) {
 		$widget = DygraphsWidget::begin([
-			'data' => 'http://localhost/testdata.csv',
+			'data' => $data,
 		]);
 		$widget->end();
-		$this->assertContains('"http://localhost/testdata.csv",', $this->getLastScript($widget));
+		$this->assertContains($expected, $this->getLastScript($widget));
 	}
 	
-	public function testDataFunction() {
-		$widget = DygraphsWidget::begin([
-			'data' => new JsExpression('function () { return [0, 7, 21]; }'),
-		]);
-		$widget->end();
-		$this->assertContains('function () { return [0, 7, 21]; },', $this->getLastScript($widget));
-	}
-	
-	public function testDataArray() {
-		$widget = DygraphsWidget::begin([
-			'data' => [
-				[1,25,100],
-				[2,50,90],
-				[3,100,80]
-			],
-		]);
-		$widget->end();
-		$this->assertContains('[[1,25,100],[2,50,90],[3,100,80]],', $this->getLastScript($widget));
+	public function dataFormatProvider() {
+		return [
+			['http://localhost/testdata.csv', '"http://localhost/testdata.csv",'],
+			[new JsExpression('function () { return [0, 7, 21]; }'), 'function () { return [0, 7, 21]; },'],
+			[[[1,25,100], [2,50,90], [3,100,80]], '[[1,25,100],[2,50,90],[3,100,80]],'],
+		];
 	}
 	
 	public function testDataWithDates() {
