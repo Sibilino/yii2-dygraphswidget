@@ -65,6 +65,20 @@ class DygraphsWidget extends Widget
 	 * @var boolean
 	 */
 	public $xIsDate;
+	/**
+	 * CSS selector that matches checkboxes in your DOM. If this property is set, the matched checkboxes will control the visibility
+	 * of series in the Dygraphs chart. To associate a series with a checkbox, specify the id of the series in the {@link checkBoxReferenceAttr}
+	 * attribute of the checkbox.
+	 * @var string Optional. If this property is not set, the visibility checkbox feature will be disabled.
+	 * @since 1.0.0
+	 */
+	public $checkBoxSelector;
+	/**
+	 * The attribute of each checkbox matched by {@link $checkBoxSelector} that indicats which of the series is controlled by that checkbox.
+	 * @var string Optional. By default, the attribute is "id".
+	 * @since 1.0.0
+	 */
+	public $checkBoxReferenceAttr = 'id';
 	
 	public function init() {
 		if ($this->hasModel()) {
@@ -86,17 +100,51 @@ class DygraphsWidget extends Widget
 	
 	public function run() {
 		
+		$this->view->registerJs($this->getGraphScript(), $this->scriptPosition);
+		if (isset($this->checkBoxSelector)) {
+			$position = $this->scriptPosition;
+			if ($position !== View::POS_LOAD) {
+				$position = View::POS_READY; // Checkbox script requires JQuery; allow only POS_LOAD or POS_READY
+			}
+			$this->view->registerJs($this->getCheckBoxScript(), $position);
+		}
+		return Html::tag('div', '', $this->htmlOptions);
+	}
+	
+	/**
+	 * Generates the JavaScript code that will initialize the Dygraphs object.
+	 * @return string
+	 * @since 1.0.0
+	 */
+	protected function getGraphScript() {
 		$id = $this->htmlOptions['id'];
 		$options = Json::encode($this->options);
 		$data = $this->preprocessData();
-		$js = "var $this->jsVarName = new Dygraph(
-			 document.getElementById('$id'),
-			 $data,
-			 $options
-		);";
-		$this->view->registerJs($js, $this->scriptPosition);
-		
-		return Html::tag('div', '', $this->htmlOptions);
+		return "
+			var $this->jsVarName = new Dygraph(
+				document.getElementById('$id'),
+				$data,
+				$options
+			);
+		";
+	}
+	
+	/**
+	 * Generates the JavaScript code that will to enable the visibility checkbox feature.
+	 * @return string
+	 * @since 1.0.0
+	 */
+	protected function getCheckBoxScript() {
+		return "
+			// Check the checkboxes that correspond to visible series
+			$.each($this->jsVarName.getOption('visibility'), function (i, val) {
+				$('$this->checkBoxSelector[$this->checkBoxReferenceAttr=' + i + ']').prop('checked', val);
+			});
+			// On checkbox click, modify the visibility of the corresponding series
+			$('$this->checkBoxSelector').click(function () {
+				$this->jsVarName.setVisibility($(this).attr('$this->checkBoxReferenceAttr'), $(this).prop('checked'));
+			});
+		";
 	}
 	
 	/**

@@ -54,6 +54,7 @@ class DygraphsWidgetTest extends TestCase {
 		]);
 		$widget->end();
 		$this->assertArrayHasKey(View::POS_LOAD, $widget->view->js);
+		$this->assertEquals(1, count($widget->view->js));
 	}
 	
 	/**
@@ -137,6 +138,18 @@ class DygraphsWidgetTest extends TestCase {
 		$this->assertEquals(
 				'<div id="test-id" class="test-class centered" data-toggle="dropdown" onChange="alert(&#039;hello&#039;)"></div>',
 				$output);
+	}
+	
+	public function testCheckBoxes() {
+		$widget = DygraphsWidget::begin([
+			'htmlOptions' => ['id' => 'test-checks'],
+			'scriptPosition' => View::POS_LOAD,
+			'checkBoxSelector' => '.visible-series',
+			'checkBoxReferenceAttr' => 'series-id',
+		]);
+		$widget->end();
+		$this->assertEquals(2, count($widget->view->js[View::POS_LOAD]));
+		$this->assertContains('.visible-series[series-id=', $this->getLastScript($widget));
 	}
 	
 	/**
