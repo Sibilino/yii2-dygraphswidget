@@ -29,7 +29,7 @@ Then, download the widget .zip file and extract the **contents** of its _widget_
 Next, edit _config/web.php_ and add the following entry:
 ```php
 [
-	'alias' => [
+	'aliases' => [
 		'@sibilino/y2dygraphs' => '@sibilino/yii2-dygraphswidget/widget',
 	],
 ]
