@@ -22,16 +22,18 @@ Add *sibilino/yii2-dygraphswidget* to your *composer.json* file and perform a Co
 
 If for some reason you cannot or do not want to use [Composer](https://getcomposer.org/ "Composer"), then you must create the widget folder manually, and then configure your Yii application to autoload the widget classes.
 
-First, create the folder _sibilino/yii2-dygraphswidget/widget_ inside the _vendor_ subfolder of your Yii application.
+First, create the folder structure _sibilino/yii2-dygraphswidget/widget_ inside the _vendor_ subfolder of your Yii application.
 
 Then, download the widget .zip file and extract the **contents** of its _widget_ subfolder into the folder you created in the previous step.
 
 Next, edit _config/web.php_ and add the following entry:
 ```php
 [
+	//...
 	'aliases' => [
-		'@sibilino/y2dygraphs' => '@sibilino/yii2-dygraphswidget/widget',
+		'@sibilino/y2dygraphs' => '@vendor/sibilino/yii2-dygraphswidget/widget',
 	],
+	//...
 ]
 ```
 
