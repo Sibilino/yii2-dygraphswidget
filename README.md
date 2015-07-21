@@ -4,8 +4,10 @@ A simple graph widget for Yii 2, based on [Dygraphs] (http://dygraphs.com/).
 
 ## Changelog
 ------------
-(1.1.0) - Support for DateTime data and Data Providers.
-(1.0.0) - Added visibility checkboxes feature and completed tests.
+```
+1.1.0 - Support for DateTime data and Data Providers.
+1.0.0 - Added visibility checkboxes feature and completed tests.
+```
 
 ## Installation
 ---------------
