@@ -66,7 +66,7 @@ echo DygraphsWidget::widget([
 
 ## Data formats
 ---------------
-The data property can be specified in three different formats. Consider the following examples, and make sure to read [the official documentation] (http://dygraphs.com/data.html) for more details:
+The data to display in the widget can be specified in several ways. Consider the following examples, and make sure to read [the official documentation] (http://dygraphs.com/data.html) for more details:
 - **Matrix**
 ```php
 $data = [
@@ -81,6 +81,25 @@ URL to a text file with the data.
 ```php
 $data = 'http://dygraphs.com/dow.txt';
 ```
+- **Model attribute**
+Specify the `model` and `attribute` configuration parameters to take the data from an attribute of a `yii\base\Model` object:
+```php
+$myModel = UserStats::findOne($id);
+// Assume $myModel->loginAttempts contains a matrix of login attemps per day
+echo DygraphsWidget::widget([
+	'model' => $myModel,
+	'attribute' => 'loginAttempts',
+	'options' => [
+		//...
+	],
+]);
+```
+
+- **Data Provider**
+The `data` property can contain a Data Provider (implementing `yii\data\DataProviderInterface`). In  this case, the
+data matrix will be generated from the models provided by the Data Provider. Each data row will contain the values in
+all attributes of one model.
+
 - **JavaScript**
 JS code that returns a data object usable by Dygraphs. The code must be wrapped inside a JsExpression object:
 ```php
@@ -104,7 +123,7 @@ $your_data = new JsExpression('function () {
 The following widget properties can also be specified:
 - **xIsDate**: Set this property to true if the x-values (first value in each row of the data matrix) are date strings, in order to properly convert them to JS date objects for Dygraphs.
 - **scriptUrl**: The URL where the Dygraphs.js library is taken from. If not set, the widget will locally publish its own distribution of the Dygraphs library.
-- **model** and **attribute**: Specify a CModel instance and one of its attributes in order to take the data from it.
+- **model** and **attribute**: Specify a `yii\base\Model` instance and one of its attributes in order to take the data from it.
 - **jsVarName**: Specifies a custom name for the JS variable that will receive the Dygraphs object upon creation.
 - **htmlOptions**: Additional HTML attributes for the graph-containing div.
 
