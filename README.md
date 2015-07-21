@@ -4,7 +4,8 @@ A simple graph widget for Yii 2, based on [Dygraphs] (http://dygraphs.com/).
 
 ## Changelog
 ------------
-1.0.0 - Added visibility checkboxes feature and completed tests.
+(1.1.0) - Support for DateTime data and Data Providers.
+(1.0.0) - Added visibility checkboxes feature and completed tests.
 
 ## Installation
 ---------------
@@ -97,8 +98,22 @@ echo DygraphsWidget::widget([
 
 - **Data Provider**
 The `data` property can contain a Data Provider (implementing `yii\data\DataProviderInterface`). In  this case, the
-data matrix will be generated from the models provided by the Data Provider. Each data row will contain the values in
-all attributes of one model.
+data matrix will be generated from the models provided by the Data Provider. Each data row will contain the values of
+the attributes of one model. By default, all attributes of every model will be used, but you configure the `attributes`
+property to specify the list of attributes to appear in a row (the specified order will be taken into account).
+```php
+$provider = new ActiveDataProvider([
+    'query' => User::find(),
+]);
+// Let's assume User contains the attributes 'id', 'joinDate', 'powerLevel'
+echo DygraphsWidget::widget([
+	'data' => $provider,
+	'attributes' => ['joinDate', 'powerLevel'], // Display the graph of powerLevel by joinDate
+	'options' => [
+		//...
+	],
+]);
+```
 
 - **JavaScript**
 JS code that returns a data object usable by Dygraphs. The code must be wrapped inside a JsExpression object:
@@ -124,6 +139,8 @@ The following widget properties can also be specified:
 - **xIsDate**: Set this property to true if the x-values (first value in each row of the data matrix) are date strings, in order to properly convert them to JS date objects for Dygraphs.
 - **scriptUrl**: The URL where the Dygraphs.js library is taken from. If not set, the widget will locally publish its own distribution of the Dygraphs library.
 - **model** and **attribute**: Specify a `yii\base\Model` instance and one of its attributes in order to take the data from it.
+- **attributes**: To be used when `data` contains a data provider. Configure `attributes` with a list of the model
+attributes that will be in every row of the data matrix. If this list is empty, all attributes will be taken.
 - **jsVarName**: Specifies a custom name for the JS variable that will receive the Dygraphs object upon creation.
 - **htmlOptions**: Additional HTML attributes for the graph-containing div.
 
