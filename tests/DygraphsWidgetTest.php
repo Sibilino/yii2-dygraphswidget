@@ -19,15 +19,7 @@ class DygraphsWidgetTest extends TestCase {
 	
 	protected function setUp() {
 		parent::setUp();
-		$this->mockApplication([
-			'vendorPath' => __DIR__.'/../../..',
-			'components' => [
-				'assetManager' => [
-					'basePath' => __DIR__.'/../../../../assets',
-					'baseUrl' => 'http://localhost/tester2/assets',
-				],
-			],
-		]);
+		$this->mockWebApplication();
 	}
 	
 	/* @var $widget DygraphsWidget */
