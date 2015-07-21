@@ -88,7 +88,7 @@ $data = 'http://dygraphs.com/dow.txt';
 Specify the `model` and `attribute` configuration parameters to take the data from an attribute of a `yii\base\Model` object:
 ```php
 $myModel = UserStats::findOne($id);
-// Assume $myModel->loginAttempts contains a matrix of login attemps per day
+// Assume $myModel->loginAttempts contains a matrix of login attempts per day
 echo DygraphsWidget::widget([
 	'model' => $myModel,
 	'attribute' => 'loginAttempts',
@@ -101,7 +101,7 @@ echo DygraphsWidget::widget([
 - **Data Provider**
 The `data` property can contain a Data Provider (implementing `yii\data\DataProviderInterface`). In  this case, the
 data matrix will be generated from the models provided by the Data Provider. Each data row will contain the values of
-the attributes of one model. By default, all attributes of every model will be used, but you configure the `attributes`
+the attributes of one model. By default, all attributes of every model will be used, but you can configure the `attributes`
 property to specify the list of attributes to appear in a row (the specified order will be taken into account).
 ```php
 $provider = new ActiveDataProvider([
