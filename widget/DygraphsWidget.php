@@ -159,9 +159,12 @@ class DygraphsWidget extends Widget
 	 * @return Ambigous <string, mixed>
 	 */
 	protected function preprocessData() {
-		if (is_array($this->data)&& $this->xIsDate) {
+		if (is_array($this->data)) {
 			foreach ($this->data as &$row) {
-				$row[0] = new JsExpression("new Date('$row[0]')");
+				if ($row[0] instanceof \DateTimeInterface)
+					$row[0] = new JsExpression("new Date(".($row[0]->getTimestamp()*1000).")");
+				elseif ($this->xIsDate)
+					$row[0] = new JsExpression("new Date('$row[0]')");
 			}
 		}
 		return Json::encode($this->data);

@@ -81,6 +81,18 @@ class DygraphsWidgetTest extends TestCase {
 		$this->assertContains(
 			"[[new Date('2014/01/10 00:06:50'),25,100],[new Date('2014/12/23 10:16:40'),50,90],[new Date('2015/07/01 03:09:19'),100,80]],",
 			$this->getLastScript($widget));
+
+		$widget = DygraphsWidget::begin([
+			'data' => [
+				[new \DateTime("2014/01/10 00:06:50"), 25, 100],
+				[new \DateTime("2014/12/23 10:16:40"), 50, 90],
+				[new \DateTime("2015/07/01 03:09:19"), 100, 80]
+			],
+		]);
+		$widget->end();
+		$this->assertContains(
+			"[new Date(1389308810000),25,100],[new Date(1419326200000),50,90],[new Date(1435712959000),100,80]],",
+			$this->getLastScript($widget));
 	}
 	
 	public function testVarName() {
