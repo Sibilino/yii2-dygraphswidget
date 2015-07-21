@@ -2,6 +2,7 @@
 namespace sibilino\y2dygraphs;
 
 use yii\base\Model;
+use yii\data\ArrayDataProvider;
 use yii\web\View;
 use yii\web\JsExpression;
 use yiiunit\TestCase;
@@ -13,6 +14,14 @@ class TestModel extends Model
 		[2, 50, 90],
 		[3, 100, 80],
 	];
+}
+
+class ModelRow extends Model
+{
+	public $x;
+	public $y1;
+	public $y2;
+	public $y3;
 }
 
 class DygraphsWidgetTest extends TestCase {
@@ -65,6 +74,11 @@ class DygraphsWidgetTest extends TestCase {
 			['http://localhost/testdata.csv', '"http://localhost/testdata.csv",'],
 			[new JsExpression('function () { return [0, 7, 21]; }'), 'function () { return [0, 7, 21]; },'],
 			[[[1,25,100], [2,50,90], [3,100,80]], '[[1,25,100],[2,50,90],[3,100,80]],'],
+			[new ArrayDataProvider(['allModels'=>[
+				new ModelRow(['x'=>0, 'y1'=>2, 'y2'=>10, 'y3'=>-5]),
+				new ModelRow(['x'=>1, 'y1'=>4, 'y2'=>6, 'y3'=>-6]),
+				new ModelRow(['x'=>2, 'y1'=>6, 'y2'=>2, 'y3'=>-7]),
+			]]), '[[0,2,10,-5],[1,4,6,-6],[2,6,2,-7]],'],
 		];
 	}
 	

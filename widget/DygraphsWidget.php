@@ -7,6 +7,7 @@ use yii\web\JsExpression;
 use yii\web\View;
 use yii\helpers\Html;
 use yii\base\Model;
+use yii\data\DataProviderInterface;
 
 /**
  * @link https://github.com/Sibilino/yii2-dygraphswidget
@@ -85,6 +86,14 @@ class DygraphsWidget extends Widget
 			$attr = $this->attribute;
 			$this->data = $this->model->$attr;
 		}
+        if ($this->data instanceof DataProviderInterface) {
+            $provider = $this->data;
+            $this->data = [];
+            foreach ($provider->getModels() as $rowModel){
+                $this->data []= array_values($rowModel->attributes);
+            }
+        }
+
 		if (!isset($this->htmlOptions['id'])) {
 			$this->htmlOptions['id'] = $this->getId();
 		}
@@ -119,7 +128,7 @@ class DygraphsWidget extends Widget
 	protected function getGraphScript() {
 		$id = $this->htmlOptions['id'];
 		$options = Json::encode($this->options);
-		$data = $this->preprocessData();
+		$data = $this->processDates();
 		return "
 			var $this->jsVarName = new Dygraph(
 				document.getElementById('$id'),
@@ -158,7 +167,7 @@ class DygraphsWidget extends Widget
 	 * Encodes the current data into the proper JS variable.
 	 * @return Ambigous <string, mixed>
 	 */
-	protected function preprocessData() {
+	protected function processDates() {
 		if (is_array($this->data)) {
 			foreach ($this->data as &$row) {
 				if ($row[0] instanceof \DateTimeInterface)
