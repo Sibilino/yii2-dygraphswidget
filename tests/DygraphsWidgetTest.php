@@ -74,13 +74,18 @@ class DygraphsWidgetTest extends TestCase {
 			['http://localhost/testdata.csv', '"http://localhost/testdata.csv",'],
 			[new JsExpression('function () { return [0, 7, 21]; }'), 'function () { return [0, 7, 21]; },'],
 			[[[1,25,100], [2,50,90], [3,100,80]], '[[1,25,100],[2,50,90],[3,100,80]],'],
-			[new ArrayDataProvider(['allModels'=>[
-				new ModelRow(['x'=>0, 'y1'=>2, 'y2'=>10, 'y3'=>-5]),
-				new ModelRow(['x'=>1, 'y1'=>4, 'y2'=>6, 'y3'=>-6]),
-				new ModelRow(['x'=>2, 'y1'=>6, 'y2'=>2, 'y3'=>-7]),
-			]]), '[[0,2,10,-5],[1,4,6,-6],[2,6,2,-7]],'],
+			[$this->generateProvider(), '[[0,2,10,-5],[1,4,6,-6],[2,6,2,-7]],'],
 		];
 	}
+
+    public function testProviderAttributes() {
+        $widget = DygraphsWidget::begin([
+            'data' => $this->generateProvider(),
+            'attributes' => ['y2','x'],
+        ]);
+        $widget->end();
+        $this->assertContains('[[10,0],[6,1],[2,2]],', $this->getLastScript($widget));
+    }
 	
 	public function testDataWithDates() {
 		$widget = DygraphsWidget::begin([
@@ -178,4 +183,16 @@ class DygraphsWidgetTest extends TestCase {
 		$scripts = $widget->view->js[$widget->scriptPosition];
 		return end($scripts);
 	}
+
+    /**
+     * @return ArrayDataProvider
+     */
+    private function generateProvider()
+    {
+        return new ArrayDataProvider(['allModels'=>[
+            new ModelRow(['x'=>0, 'y1'=>2, 'y2'=>10, 'y3'=>-5]),
+            new ModelRow(['x'=>1, 'y1'=>4, 'y2'=>6, 'y3'=>-6]),
+            new ModelRow(['x'=>2, 'y1'=>6, 'y2'=>2, 'y3'=>-7]),
+        ]]);
+    }
 }

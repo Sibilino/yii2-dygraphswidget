@@ -37,6 +37,12 @@ class DygraphsWidget extends Widget
 	 * @var string
 	 */
 	public $attribute;
+    /**
+     * To be used when $data contains a data provider.
+     * @var array The attributes of each of the provided models that will form the data rows, in order. If empty, all model attributes will be in each row.
+     * @since 1.1.0
+     */
+    public $attributes = [];
 	/**
 	 * The data array to be passed to the graph.
 	 * The standard format is to use a matrix of array rows, for which $row[0] is the X axis, and $row[N] is the Y axis for the data series N.
@@ -87,11 +93,7 @@ class DygraphsWidget extends Widget
 			$this->data = $this->model->$attr;
 		}
         if ($this->data instanceof DataProviderInterface) {
-            $provider = $this->data;
-            $this->data = [];
-            foreach ($provider->getModels() as $rowModel){
-                $this->data []= array_values($rowModel->attributes);
-            }
+            $this->data = $this->getProviderData();
         }
 
 		if (!isset($this->htmlOptions['id'])) {
@@ -106,6 +108,31 @@ class DygraphsWidget extends Widget
 			DygraphsAsset::register($this->view);
 		}
 	}
+
+    /**
+     * Extracts the data from the configured data provider in $this->data.
+     * @return array
+     * @since 1.1.0
+     */
+    protected function getProviderData()
+    {
+        $models = $this->data->getModels();
+        $data = [];
+        if ($this->attributes) {
+            foreach ($models as $model) {
+                $rowData = [];
+                foreach ($this->attributes as $attr) {
+                    $rowData []= $model->$attr;
+                }
+                $data []= $rowData;
+            }
+        } else {
+            foreach ($models as $rowModel){
+                $data []= array_values($rowModel->attributes);
+            }
+        }
+        return $data;
+    }
 	
 	public function run() {
 		
