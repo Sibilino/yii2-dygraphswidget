@@ -122,13 +122,13 @@ class DygraphsWidget extends Widget
             foreach ($models as $model) {
                 $rowData = [];
                 foreach ($this->attributes as $attr) {
-                    $rowData []= $model->$attr;
+                    $rowData []= is_array($model) ? $model[$attr] : $model->$attr;
                 }
                 $data []= $rowData;
             }
         } else {
             foreach ($models as $rowModel){
-                $data []= array_values($rowModel->attributes);
+                $data []= array_values($rowModel instanceof Model ? $rowModel->attributes : $rowModel);
             }
         }
         return $data;
