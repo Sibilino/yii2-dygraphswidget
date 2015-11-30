@@ -201,6 +201,6 @@ class DygraphsWidget extends Widget
                     $row[0] = new JsExpression("new Date('$row[0]')");
             }
         }
-        return Json::encode($this->data);
+        return Json::encode($this->data, JSON_NUMERIC_CHECK);
     }
 }
