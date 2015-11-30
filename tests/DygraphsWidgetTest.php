@@ -75,6 +75,7 @@ class DygraphsWidgetTest extends TestCase {
 			[new JsExpression('function () { return [0, 7, 21]; }'), 'function () { return [0, 7, 21]; },'],
 			[[[1,25,100], [2,50,90], [3,100,80]], '[[1,25,100],[2,50,90],[3,100,80]],'],
 			[$this->generateProvider(), '[[0,2,10,-5],[1,4,6,-6],[2,6,2,-7]],'],
+			[$this->generateProvider(false), '[[0,2,10,-5],[1,4,6,-6],[2,6,2,-7]],'],
 		];
 	}
 
@@ -185,14 +186,24 @@ class DygraphsWidgetTest extends TestCase {
 	}
 
     /**
+     * @param boolean $model Whether to return models (true, default) or arrays
      * @return ArrayDataProvider
      */
-    private function generateProvider()
+    private function generateProvider($model = true)
     {
-        return new ArrayDataProvider(['allModels'=>[
-            new ModelRow(['x'=>0, 'y1'=>2, 'y2'=>10, 'y3'=>-5]),
-            new ModelRow(['x'=>1, 'y1'=>4, 'y2'=>6, 'y3'=>-6]),
-            new ModelRow(['x'=>2, 'y1'=>6, 'y2'=>2, 'y3'=>-7]),
-        ]]);
+        if ($model) {
+            $models = [
+                new ModelRow(['x' => 0, 'y1' => 2, 'y2' => 10, 'y3' => -5]),
+                new ModelRow(['x' => 1, 'y1' => 4, 'y2' => 6, 'y3' => -6]),
+                new ModelRow(['x' => 2, 'y1' => 6, 'y2' => 2, 'y3' => -7]),
+            ];
+        } else {
+            $models = [
+                ['x' => 0, 'y1' => 2, 'y2' => 10, 'y3' => -5],
+                ['x' => 1, 'y1' => 4, 'y2' => 6, 'y3' => -6],
+                ['x' => 2, 'y1' => 6, 'y2' => 2, 'y3' => -7],
+            ];
+        }
+        return new ArrayDataProvider(['allModels' => $models]);
     }
 }
