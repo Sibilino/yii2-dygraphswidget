@@ -121,9 +121,13 @@ class DygraphsWidget extends Widget
         foreach ($models as $model) {
             $row = $model instanceof Model ? $model->attributes : $model;
             if ($this->attributes) {
-                $row = array_intersect_key($row, array_flip($this->attributes));
+                $values = [];
+                foreach ($this->attributes as $attr) {
+                    $values[$attr] = $row[$attr];
+                }
+                $row = $values;
             }
-            $data [] = $row;
+            $data [] = array_values($row);
         }
         return $data;
     }
