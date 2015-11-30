@@ -202,6 +202,6 @@ class DygraphsWidget extends Widget
             }
             return Json::encode($this->data, JSON_NUMERIC_CHECK);
         }
-        return Json::encode($this->data, JSON_NUMERIC_CHECK);
+        return Json::encode($this->data);
     }
 }
