@@ -11,7 +11,7 @@ use yii\data\DataProviderInterface;
 
 /**
  * @link https://github.com/Sibilino/yii2-dygraphswidget
- * @copyright Copyright (c) 2015 Luis Hernández Hernández
+ * @copyright Copyright (c) 2015 Luis HernÃ¡ndez HernÃ¡ndez
  * @license http://opensource.org/licenses/MIT MIT
  */
 class DygraphsWidget extends Widget 
@@ -200,6 +200,7 @@ class DygraphsWidget extends Widget
                 elseif ($this->xIsDate)
                     $row[0] = new JsExpression("new Date('$row[0]')");
             }
+            return Json::encode($this->data, JSON_NUMERIC_CHECK);
         }
         return Json::encode($this->data, JSON_NUMERIC_CHECK);
     }
