@@ -1,5 +1,7 @@
-# Dygraphs Widget for Yii
--------------------------
+# Dygraphs Widget for Yii 2
+---------------------------
+[![Total Downloads](https://poser.pugx.org/sibilino/yii2-dygraphswidget/downloads)](https://packagist.org/packages/sibilino/yii2-dygraphswidget)
+
 A simple graph widget for Yii 2, based on [Dygraphs] (http://dygraphs.com/).
 
 ## Changelog
